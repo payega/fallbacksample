@@ -65,6 +65,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
             <version>1.0.4</version>
@@ -98,6 +103,12 @@
             <type>pom</type>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.ibm.websphere.appserver.api</groupId>
             <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
             <version>1.0.18</version>
@@ -115,6 +126,19 @@
             <version>2.0.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- tag::fault_tolerance[] -->
+        <dependency>
+            <groupId>org.eclipse.microprofile.fault-tolerance</groupId>
+            <artifactId>microprofile-fault-tolerance-api</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- end::fault_tolerance[] -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.2.11</version>
+        </dependency>        
     </dependencies>
 
     <build>
@@ -236,6 +260,30 @@
                     <reportsDirectory>${project.build.directory}/test-reports/it</reportsDirectory>
                 </configuration>
             </plugin>
+            <!-- copy resource configuration -->                
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                <execution>
+                    <id>copy-resources</id>
+                    <!-- here the phase you need -->
+                    <phase>validate</phase>
+                    <goals>
+                    <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                    <outputDirectory>mc-resources</outputDirectory>
+                    <resources>          
+                        <resource>
+                        <directory>resources</directory>
+                        <filtering>true</filtering>
+                        </resource>
+                    </resources>              
+                    </configuration>            
+                </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -350,6 +398,7 @@
                                 <default.http.port>${testServerHttpPort}</default.http.port>
                                 <default.https.port>${testServerHttpsPort}</default.https.port>
                                 <app.location>${project.artifactId}-${project.version}.war</app.location>
+                                <war.context>fsample</war.context>
                             </bootstrapProperties>
                             <installAppPackages>project</installAppPackages>
                         </configuration>
@@ -403,6 +452,7 @@
                                 <default.http.port>${testServerHttpPort}</default.http.port>
                                 <default.https.port>${testServerHttpsPort}</default.https.port>
                                 <app.location>${project.artifactId}-${project.version}.war</app.location>
+                                <war.context>fsample</war.context>
                             </bootstrapProperties>
                             <installAppPackages>project</installAppPackages>
                         </configuration>
